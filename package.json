@@ -1,0 +1,29 @@
+{
+  "name": "node-ts-arch",
+  "version": "1.0.0",
+  "description": "Node.js Typescript Archetype",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist",
+    "dev": "nodemon -x \"esr --cache\" -w src -e ts ./src/index.ts",
+    "lint": "eslint .",
+    "build": "tsc",
+    "build:check": "tsc --noEmit",
+    "test": "mocha --extension ts -r esr-register.js ./src/**/*.test.ts",
+    "test:watch": "npm test -- -w",
+    "test:cover": "nyc --reporter=html npm test"
+  },
+  "author": "Ganesha <reekoheek@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.16.2",
+    "esbuild-runner": "^2.2.2",
+    "eslint-config-xinix": "^2.0.1",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.22",
+    "nyc": "^15.1.0",
+    "typescript": "^5.0.4"
+  }
+}
