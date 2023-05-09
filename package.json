@@ -3,16 +3,58 @@
   "version": "1.0.0",
   "description": "Node.js Typescript Archetype",
   "private": true,
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node ./dist",
-    "dev": "nodemon -x \"esr --cache\" -w src -e ts ./src/index.ts",
-    "lint": "eslint .",
-    "build": "tsc",
+    "dev": "nodemon -x 'esr --cache' -w src -e ts ./src/index.ts",
+    "start": "wireit",
+    "lint": "wireit",
+    "build": "wireit",
     "build:check": "tsc --noEmit",
-    "test": "mocha --extension ts -r esr-register.js ./src/**/*.test.ts",
-    "test:watch": "npm test -- -w",
-    "test:cover": "nyc --reporter=html npm test"
+    "test": "wireit",
+    "test:watch": "mocha --extension ts -r esr-register.js './src/**/*.test.ts' -- -w"
+  },
+  "wireit": {
+    "start": {
+      "command": "node ./dist",
+      "dependencies": [
+        "lint",
+        "test",
+        "build"
+      ]
+    },
+    "lint": {
+      "command": "eslint ./src",
+      "files": [
+        "./eslintrc.js",
+        "./eslintignore",
+        "./src/**/*.ts"
+      ],
+      "output": []
+    },
+    "build": {
+      "command": "tsc",
+      "files": [
+        "./src/**/*.ts",
+        "./tsconfig.json"
+      ],
+      "output": [
+        "./dist/**"
+      ],
+      "clean": "if-file-deleted"
+    },
+    "test": {
+      "command": "nyc --reporter=html mocha --extension ts -r esr-register.js './src/**/*.test.ts'",
+      "files": [
+        "./src/**/*.ts",
+        "./esr-register.js",
+        "./tsconfig.json"
+      ],
+      "output": [
+        "./nyc_output/**",
+        "./coverage/**"
+      ],
+      "clean": "if-file-deleted"
+    }
   },
   "author": "Ganesha <reekoheek@gmail.com>",
   "license": "MIT",
@@ -24,6 +66,7 @@
     "mocha": "^10.2.0",
     "nodemon": "^2.0.22",
     "nyc": "^15.1.0",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "wireit": "^0.9.5"
   }
 }
