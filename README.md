@@ -5,16 +5,16 @@ Don't forget to edit package.json and change `name`, `author`, `license`, etc.
 ## Development
 
 ```sh
-npm i
-npm run dev
+pnpm i
+pnpm dev
 ```
 
 ## Build and run in production
 
 ```sh
-npm i
-npm run build
-npm start
+pnpm i
+pnpm build
+pnpm start
 ```
 
 Happy coding...
