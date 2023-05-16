@@ -5,24 +5,24 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon -x 'esr --cache' -w src -e ts ./src/index.ts",
-    "start": "wireit",
+    "start": "node ./dist/index.js",
+    "dev": "node -r esbuild-register ./src/index.ts",
     "lint": "wireit",
+    "lint:eslint": "wireit",
+    "lint:ts": "wireit",
     "build": "wireit",
-    "build:check": "tsc --noEmit",
+    "build:ts": "wireit",
     "test": "wireit",
-    "test:watch": "mocha --extension ts -r esr-register.js './src/**/*.test.ts' -- -w"
+    "test:watch": "pnpm run test --watch"
   },
   "wireit": {
-    "start": {
-      "command": "node ./dist",
+    "lint": {
       "dependencies": [
-        "lint",
-        "test",
-        "build"
+        "lint:eslint",
+        "lint:ts"
       ]
     },
-    "lint": {
+    "lint:eslint": {
       "command": "eslint ./src",
       "files": [
         "./eslintrc.js",
@@ -31,11 +31,26 @@
       ],
       "output": []
     },
+    "lint:ts": {
+      "command": "tsc --noEmit",
+      "files": [
+        "./tsconfig.json",
+        "./src/**/*.ts"
+      ],
+      "output": []
+    },
     "build": {
+      "dependencies": [
+        "lint",
+        "test",
+        "build:ts"
+      ]
+    },
+    "build:ts": {
       "command": "tsc",
       "files": [
-        "./src/**/*.ts",
-        "./tsconfig.json"
+        "./tsconfig.json",
+        "./src/**/*.ts"
       ],
       "output": [
         "./dist/**"
@@ -43,11 +58,10 @@
       "clean": "if-file-deleted"
     },
     "test": {
-      "command": "nyc --reporter=html mocha --extension ts -r esr-register.js './src/**/*.test.ts'",
+      "command": "nyc --reporter=html mocha --extension ts -r esbuild-register './src/**/*.test.ts'",
       "files": [
-        "./src/**/*.ts",
-        "./esr-register.js",
-        "./tsconfig.json"
+        "./tsconfig.json",
+        "./src/**/*.ts"
       ],
       "output": [
         "./nyc_output/**",
@@ -60,11 +74,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.16.2",
-    "esbuild-runner": "^2.2.2",
+    "@types/node": "^20.1.5",
+    "esbuild-register": "^3.4.2",
     "eslint-config-xinix": "^2.0.1",
     "mocha": "^10.2.0",
-    "nodemon": "^2.0.22",
     "nyc": "^15.1.0",
     "typescript": "^5.0.4",
     "wireit": "^0.9.5"
